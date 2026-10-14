@@ -1,0 +1,561 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04121b">
+<title>AFTERTAP — Digital Protection</title>
+
+<style>
+:root {
+  --bg:#041019;
+  --panel:#0b1d28;
+  --panel2:#102936;
+  --cyan:#43f5e1;
+  --green:#00e6a0;
+  --blue:#28a9ff;
+  --muted:#8ba6b5;
+  --white:#f3fbff;
+  --line:rgba(119,220,239,.15);
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+button,input { font:inherit; }
+button { cursor:pointer; }
+.app {
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  margin:auto;
+  position:relative;
+  padding-bottom:100px;
+  background:
+    radial-gradient(ellipse at 20% 0%,rgba(0,230,160,.13),transparent 37%),
+    radial-gradient(ellipse at 100% 30%,rgba(40,169,255,.12),transparent 35%),
+    var(--bg);
+}
+header {
+  padding:calc(env(safe-area-inset-top) + 20px) 22px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.brand { display:flex; gap:11px; align-items:center; }
+.logo {
+  width:43px;height:43px;border:1px solid var(--cyan);
+  border-radius:14px;display:grid;place-items:center;
+  color:var(--cyan);font-weight:900;font-size:25px;
+  background:linear-gradient(145deg,rgba(67,245,225,.17),rgba(0,230,160,.03));
+  box-shadow:0 0 24px rgba(67,245,225,.12);
+}
+.brand-name {font-size:20px;font-weight:850;letter-spacing:1.3px;}
+.brand-tag {font-size:9px;color:var(--green);letter-spacing:1.6px;margin-top:4px;}
+.status-dot {
+  width:9px;height:9px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 13px var(--green);
+}
+main { padding:6px 20px 25px; }
+.screen { display:none; animation:appear .3s ease; }
+.screen.active { display:block; }
+@keyframes appear {
+  from {opacity:0;transform:translateY(7px)}
+  to {opacity:1;transform:translateY(0)}
+}
+.eyebrow {
+  color:var(--cyan);font-size:10px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;
+}
+h1 {
+  font-size:clamp(36px,10vw,49px);
+  line-height:1.02;letter-spacing:-1.8px;
+  margin:15px 0 12px;font-weight:850;
+}
+h1 span {
+  background:linear-gradient(90deg,var(--cyan),var(--green));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.subtitle {font-size:14px;color:var(--muted);line-height:1.65;max-width:320px;}
+.card {
+  background:linear-gradient(145deg,rgba(18,44,58,.95),rgba(7,23,33,.95));
+  border:1px solid var(--line);border-radius:23px;
+  padding:19px;margin-top:18px;
+  box-shadow:0 14px 35px rgba(0,0,0,.13);
+}
+.hero {
+  position:relative;overflow:hidden;text-align:center;
+  padding:23px 18px 21px;margin-top:23px;
+}
+.hero:before {
+  content:"";position:absolute;width:260px;height:260px;
+  border:1px solid rgba(67,245,225,.17);border-radius:50%;
+  top:-120px;left:calc(50% - 130px);
+  box-shadow:0 0 0 20px rgba(67,245,225,.025),0 0 0 40px rgba(67,245,225,.02);
+}
+.shield-ring {
+  position:relative;width:155px;height:155px;margin:2px auto 20px;
+  border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--cyan),var(--blue),var(--green),var(--cyan));
+  box-shadow:0 0 28px rgba(40,200,255,.17);
+  animation:rotate 12s linear infinite;
+}
+.shield-inner {
+  width:143px;height:143px;border-radius:50%;
+  background:radial-gradient(circle at 40% 20%,#153e4c,#071722 70%);
+  border:4px solid var(--bg);display:grid;place-items:center;
+}
+.shield-icon {font-size:53px;filter:drop-shadow(0 0 12px rgba(67,245,225,.7));}
+@keyframes rotate {to{filter:hue-rotate(25deg)}}
+.hero h2 {font-size:18px;margin:0 0 8px;}
+.hero p {font-size:12px;color:var(--muted);margin:0 0 19px;}
+.primary {
+  width:100%;border:0;border-radius:15px;padding:16px 18px;
+  color:#03201d;font-weight:850;letter-spacing:.3px;
+  background:linear-gradient(100deg,var(--green),var(--cyan));
+  box-shadow:0 6px 24px rgba(0,230,160,.13);
+  transition:transform .15s,filter .15s;
+}
+.primary:active {transform:scale(.98);filter:brightness(.9);}
+.section-head {
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;margin:27px 0 12px;
+}
+.section-head h2 {font-size:17px;margin:0;}
+.small-link {color:var(--cyan);background:none;border:0;font-size:12px;}
+.tools {display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.tool {
+  text-align:left;min-height:135px;padding:17px;
+  background:linear-gradient(145deg,#102a37,#091a24);
+  border:1px solid var(--line);border-radius:19px;color:var(--white);
+}
+.tool-icon {
+  width:39px;height:39px;border-radius:12px;
+  display:grid;place-items:center;font-size:21px;
+  background:rgba(67,245,225,.09);margin-bottom:15px;
+}
+.tool b {display:block;font-size:14px;margin-bottom:6px;}
+.tool small {color:var(--muted);font-size:11px;line-height:1.5;}
+.stats {display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.stat {
+  background:rgba(5,20,29,.6);border:1px solid var(--line);
+  border-radius:15px;padding:13px 8px;text-align:center;
+}
+.stat strong {display:block;font-size:20px;color:var(--cyan);}
+.stat span {display:block;font-size:10px;color:var(--muted);margin-top:6px;}
+.field-label {display:block;font-size:12px;color:#c5d9e3;margin:18px 0 9px;}
+.url-input {
+  width:100%;padding:15px 14px;border:1px solid rgba(67,245,225,.25);
+  border-radius:13px;background:#06151e;color:white;outline:none;
+}
+.url-input:focus {border-color:var(--cyan);box-shadow:0 0 0 3px rgba(67,245,225,.08);}
+.hint {font-size:11px;line-height:1.55;color:var(--muted);margin-top:10px;}
+.result {display:none;margin-top:16px;}
+.result.show {display:block;animation:appear .25s ease;}
+.result-title {display:flex;gap:12px;align-items:center;}
+.result-symbol {
+  width:45px;height:45px;border-radius:14px;display:grid;place-items:center;
+  background:rgba(255,193,77,.12);font-size:22px;
+}
+.result h3 {font-size:16px;margin:0 0 5px;}
+.result p {font-size:12px;line-height:1.6;color:var(--muted);}
+.warning-list {padding-left:18px;font-size:12px;line-height:1.9;color:#d3e1e8;}
+.history-item {
+  display:flex;gap:12px;align-items:center;padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+.history-item:last-child {border-bottom:0;}
+.history-symbol {
+  width:39px;height:39px;border-radius:12px;background:rgba(67,245,225,.08);
+  display:grid;place-items:center;
+}
+.history-content {min-width:0;flex:1;}
+.history-content b {display:block;font-size:13px;overflow-wrap:anywhere;}
+.history-content small {display:block;color:var(--muted);font-size:10px;margin-top:5px;}
+.empty {color:var(--muted);font-size:13px;text-align:center;padding:25px 8px;}
+.setting-row {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:16px 0;border-bottom:1px solid var(--line);
+}
+.setting-row:last-child {border:0;}
+.setting-row b {font-size:13px;}
+.setting-row small {display:block;font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5;}
+.switch {accent-color:var(--green);width:20px;height:20px;}
+.bottom-nav {
+  position:fixed;z-index:10;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;padding:12px 13px calc(env(safe-area-inset-bottom) + 10px);
+  background:rgba(4,16,25,.93);backdrop-filter:blur(20px);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);
+}
+.nav-btn {
+  border:0;background:none;color:#78919e;font-size:10px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 0;
+}
+.nav-icon {font-size:21px;line-height:1.2;}
+.nav-btn.active {color:var(--cyan);}
+.nav-btn.active .nav-icon {filter:drop-shadow(0 0 7px rgba(67,245,225,.5));}
+.disclaimer {
+  color:#77919e;font-size:10px;line-height:1.65;margin-top:18px;
+  padding:0 2px;
+}
+.page-title {font-size:30px;letter-spacing:-1px;margin:13px 0 8px;}
+.page-intro {font-size:13px;line-height:1.6;color:var(--muted);}
+.footer-note {text-align:center;color:#577381;font-size:10px;margin:24px 0 0;}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <div class="brand-name">AFTERTAP</div>
+      <div class="brand-tag">DEIN DIGITALER SCHUTZ</div>
+    </div>
+  </div>
+  <div class="status-dot" title="App aktiv"></div>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section class="screen active" id="home">
+    <div class="eyebrow">DEIN DIGITALER SCHUTZ</div>
+    <h1>Denk nach.<br><span>Dann tippe.</span></h1>
+    <p class="subtitle">
+      Verstehe mögliche digitale Risiken – einfach erklärt.
+      Prüfe Links, erkenne Warnzeichen und bleib aufmerksam.
+    </p>
+
+    <div class="card hero">
+      <div class="shield-ring">
+        <div class="shield-inner"><div class="shield-icon">⬡</div></div>
+      </div>
+      <div class="eyebrow">QUICK CHECK</div>
+      <h2>Bevor du klickst.</h2>
+      <p>Prüfe einen Link auf typische Warnzeichen.</p>
+      <button class="primary" onclick="go('check')">⌕ &nbsp; LINK CHECK STARTEN</button>
+    </div>
+
+    <div class="section-head">
+      <h2>Deine Sicherheitstools</h2>
+      <button class="small-link" onclick="go('check')">Alle ansehen →</button>
+    </div>
+
+    <div class="tools">
+      <button class="tool" onclick="go('check')">
+        <div class="tool-icon">⌕</div>
+        <b>Link Check</b>
+        <small>Verdächtige URLs auf Warnzeichen prüfen.</small>
+      </button>
+      <button class="tool" onclick="showTips()">
+        <div class="tool-icon">◈</div>
+        <b>Phishing Guide</b>
+        <small>Verdächtige Nachrichten besser erkennen.</small>
+      </button>
+      <button class="tool" onclick="go('history')">
+        <div class="tool-icon">◷</div>
+        <b>Verlauf</b>
+        <small>Deine letzten lokalen Prüfungen.</small>
+      </button>
+      <button class="tool" onclick="go('settings')">
+        <div class="tool-icon">⚙</div>
+        <b>Einstellungen</b>
+        <small>Deine App und Daten verwalten.</small>
+      </button>
+    </div>
+
+    <div class="section-head"><h2>Deine Aktivität</h2></div>
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><strong id="statScans">0</strong><span>Checks</span></div>
+        <div class="stat"><strong id="statFlags">0</strong><span>Warnzeichen</span></div>
+        <div class="stat"><strong>100%</strong><span>Lokal geprüft*</span></div>
+      </div>
+      <p class="hint">*Die einfache Analyse läuft auf diesem Gerät. Es findet keine Online-Reputationsprüfung statt.</p>
+    </div>
+  </section>
+
+  <!-- LINK CHECK -->
+  <section class="screen" id="check">
+    <div class="eyebrow">ANALYSE-MODUL 01</div>
+    <h1 class="page-title">Link Check<span>.</span></h1>
+    <p class="page-intro">Ein Link sieht normal aus? Prüfe zuerst, ob seine Adresse typische Warnzeichen enthält.</p>
+
+    <div class="card">
+      <div class="eyebrow">URL ANALYZER</div>
+      <label class="field-label" for="url">Link zum Prüfen</label>
+      <input class="url-input" id="url" type="text" inputmode="url"
+        autocomplete="url" placeholder="https://example.com">
+      <p class="hint">Füge die Adresse ein, ohne sie zu öffnen. Gib hier keine Passwörter oder persönlichen Daten ein.</p>
+      <button class="primary" id="scanBtn" style="margin-top:15px" onclick="scanLink()">⌕ &nbsp; WARNZEICHEN CHECKEN</button>
+    </div>
+
+    <div class="card result" id="result" aria-live="polite">
+      <div class="result-title">
+        <div class="result-symbol" id="resultIcon">⚠️</div>
+        <div>
+          <div class="eyebrow">ERSTE EINSCHÄTZUNG</div>
+          <h3 id="resultTitle">Analyse abgeschlossen</h3>
+        </div>
+      </div>
+      <p id="resultSummary"></p>
+      <ul class="warning-list" id="warningList"></ul>
+      <p class="hint" id="resultDisclaimer"></p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">CHECKLISTE</div>
+      <h2 style="font-size:17px;margin:12px 0">Achte auf diese Zeichen</h2>
+      <div class="history-item">
+        <div class="history-symbol">🔤</div>
+        <div class="history-content"><b>Seltsame Schreibweise</b><small>Vertauschte Buchstaben oder ungewöhnliche Domains.</small></div>
+      </div>
+      <div class="history-item">
+        <div class="history-symbol">⏳</div>
+        <div class="history-content"><b>Zeitdruck</b><small>„Sofort handeln“ oder angeblich gesperrte Konten.</small></div>
+      </div>
+      <div class="history-item">
+        <div class="history-symbol">🔐</div>
+        <div class="history-content"><b>Passwort-Anfragen</b><small>Vorsicht bei unerwarteten Login- und Zahlungsaufforderungen.</small></div>
+      </div>
+    </div>
+    <p class="disclaimer">Wichtig: Diese Prüfung untersucht nur einfache Muster im eingegebenen Text. Sie besucht die Website nicht, überprüft keine Datenbanken und kann nicht garantieren, dass ein Link sicher oder gefährlich ist.</p>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="screen" id="history">
+    <div class="eyebrow">DEINE AKTIVITÄT</div>
+    <h1 class="page-title">Verlauf<span>.</span></h1>
+    <p class="page-intro">Deine letzten Link-Prüfungen auf diesem Gerät.</p>
+
+    <div class="card">
+      <div class="section-head" style="margin-top:0">
+        <h2>Letzte Checks</h2>
+        <button class="small-link" onclick="clearHistory()">Löschen</button>
+      </div>
+      <div id="historyList"><div class="empty">Noch keine Checks durchgeführt.<br>Starte deinen ersten Link Check.</div></div>
+    </div>
+    <p class="disclaimer">Der Verlauf wird nur während dieser Sitzung gespeichert. Beim Neuladen der Seite wird er zurückgesetzt.</p>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="screen" id="settings">
+    <div class="eyebrow">APP-KONTROLLE</div>
+    <h1 class="page-title">Settings<span>.</span></h1>
+    <p class="page-intro">Einfach, transparent und ohne unnötige Datensammlung.</p>
+
+    <div class="card">
+      <div class="eyebrow">PREFERENCES</div>
+      <div class="setting-row">
+        <div><b>Visuelle Effekte</b><small>Animierte Lichteffekte im Dashboard.</small></div>
+        <input class="switch" type="checkbox" checked onchange="toggleEffects(this.checked)">
+      </div>
+      <div class="setting-row">
+        <div><b>Lokaler Verlauf</b><small>Checks in dieser Sitzung anzeigen.</small></div>
+        <input class="switch" type="checkbox" id="historySwitch" checked onchange="historyEnabled=this.checked">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">ÜBER AFTERTAP</div>
+      <h2 style="font-size:18px">Denk nach. Dann tippe.</h2>
+      <p class="page-intro">AFTERTAP ist ein digitaler Sicherheits-Prototyp. Er hilft dir, verdächtige Muster zu erkennen, ersetzt aber keine professionelle Sicherheitsprüfung.</p>
+      <div class="setting-row">
+        <div><b>Version</b><small>AFTERTAP Prototype 1.0</small></div>
+        <span style="color:var(--cyan);font-size:12px">v1.0</span>
+      </div>
+      <div class="setting-row">
+        <div><b>Netzwerkzugriff</b><small>Diese Demo sendet deine URL nicht an einen Server.</small></div>
+        <span style="color:var(--green);font-size:12px">Lokal</span>
+      </div>
+      <button class="primary" style="margin-top:16px" onclick="showTips()">SICHERHEITSTIPPS ANZEIGEN</button>
+    </div>
+    <p class="footer-note">AFTERTAP © 2026 · DIGITAL AWARENESS</p>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-screen="home" onclick="go('home')">
+    <span class="nav-icon">⌂</span><span>Home</span>
+  </button>
+  <button class="nav-btn" data-screen="check" onclick="go('check')">
+    <span class="nav-icon">⌕</span><span>Scan</span>
+  </button>
+  <button class="nav-btn" data-screen="history" onclick="go('history')">
+    <span class="nav-icon">◷</span><span>History</span>
+  </button>
+  <button class="nav-btn" data-screen="settings" onclick="go('settings')">
+    <span class="nav-icon">⚙</span><span>Settings</span>
+  </button>
+</nav>
+</div>
+
+<script>
+let historyItems = [];
+let historyEnabled = true;
+
+function go(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === name);
+  });
+
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name === 'history') renderHistory();
+  if(name === 'home') updateStats();
+}
+
+function scanLink() {
+  const input = document.getElementById('url');
+  const raw = input.value.trim();
+  const result = document.getElementById('result');
+  const title = document.getElementById('resultTitle');
+  const summary = document.getElementById('resultSummary');
+  const icon = document.getElementById('resultIcon');
+  const list = document.getElementById('warningList');
+  const disclaimer = document.getElementById('resultDisclaimer');
+
+  result.classList.remove('show');
+
+  if(!raw) {
+    input.focus();
+    input.style.borderColor='#ff7373';
+    input.placeholder='Bitte zuerst eine URL eingeben';
+    return;
+  }
+
+  let url;
+  try {
+    url = new URL(/^https?:\/\//i.test(raw) ? raw : 'https://' + raw);
+    if(!url.hostname.includes('.') || /\s/.test(url.hostname)) throw new Error();
+  } catch(e) {
+    result.classList.add('show');
+    icon.textContent='❌';
+    title.textContent='Ungültige Adresse';
+    summary.textContent='Die Eingabe sieht nicht wie eine gültige Webadresse aus. Prüfe die Schreibweise.';
+    list.innerHTML='<li>Eine Domain wie example.com eingeben.</li><li>Keine Leerzeichen verwenden.</li>';
+    disclaimer.textContent='Es wurde keine Website geöffnet.';
+    return;
+  }
+
+  const warnings = [];
+  const host = url.hostname.toLowerCase();
+  const full = raw.toLowerCase();
+
+  if(url.protocol !== 'https:') warnings.push('Die Adresse verwendet kein HTTPS. Das allein beweist keinen Betrug, ist aber ein Warnzeichen.');
+  if(url.username || url.password) warnings.push('Die URL enthält Angaben vor dem @-Zeichen. Prüfe die tatsächliche Domain besonders sorgfältig.');
+  if(host.includes('xn--')) warnings.push('Die Domain enthält eine kodierte Schreibweise, die ungewöhnliche Zeichen verbergen kann.');
+  if(/(login|verify|verification|secure|account|wallet|password|signin|update|claim|free-gift|prize)/i.test(host))
+    warnings.push('Die Domain enthält Begriffe, die häufig in Login- oder Lockangeboten vorkommen. Das ist kein Beweis für Betrug.');
+  if((host.match(/\./g)||[]).length >= 4)
+    warnings.push('Die Domain hat viele Unterbereiche. Kontrolliere genau, welche Domain tatsächlich zum Anbieter gehört.');
+  if(/\d{5,}/.test(host)) warnings.push('Die Domain enthält eine lange Zahlenfolge.');
+  if(/(bit\.ly|tinyurl\.com|t\.co|shorturl\.at|is\.gd)\//i.test(host))
+    warnings.push('Es scheint ein verkürzter Link zu sein. Das tatsächliche Ziel ist aus der Adresse nicht ersichtlich.');
+  if(full.includes('@')) warnings.push('Das @-Zeichen in einer URL kann irreführend eingesetzt werden. Lies die Adresse vollständig.');
+  if(raw.length > 180) warnings.push('Die URL ist ungewöhnlich lang. Lange Adressen können wichtige Details verschleiern.');
+
+  const item = {
+    url: raw,
+    count: warnings.length,
+    date: new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})
+  };
+
+  if(historyEnabled) {
+    historyItems.unshift(item);
+    historyItems = historyItems.slice(0,30);
+  }
+
+  if(warnings.length >= 2) {
+    icon.textContent='⚠️';
+    title.textContent='Mehrere Warnzeichen';
+    summary.textContent='Diese Adresse verdient besondere Vorsicht. Öffne sie nicht, wenn du dem Absender oder Ziel nicht vertraust.';
+  } else if(warnings.length === 1) {
+    icon.textContent='🔎';
+    title.textContent='Ein Warnzeichen gefunden';
+    summary.textContent='Prüfe die Adresse sorgfältig und verifiziere den Anbieter über einen unabhängigen, bekannten Weg.';
+  } else {
+    icon.textContent='🛡️';
+    title.textContent='Keine Muster erkannt';
+    summary.textContent='Die einfache Textprüfung hat keine der bekannten Warnregeln ausgelöst. Das bedeutet ausdrücklich nicht, dass die Website sicher ist.';
+  }
+
+  list.innerHTML = warnings.length
+    ? warnings.map(w=>'<li>'+escapeHTML(w)+'</li>').join('')
+    : '<li>Keine der eingebauten Textregeln hat angeschlagen.</li><li>Unbekannte oder neue Betrugsseiten können trotzdem gefährlich sein.</li>';
+
+  disclaimer.textContent='Nur eine lokale Musterprüfung. Keine Verbindung zur Website, keine Echtzeit-Datenbank und keine Sicherheitsgarantie.';
+  result.classList.add('show');
+  input.style.borderColor='rgba(67,245,225,.25)';
+  updateStats();
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+function renderHistory() {
+  const box = document.getElementById('historyList');
+  if(!historyItems.length) {
+    box.innerHTML='<div class="empty">Noch keine Checks durchgeführt.<br>Starte deinen ersten Link Check.</div>';
+    return;
+  }
+  box.innerHTML = historyItems.map(item => `
+    <div class="history-item">
+      <div class="history-symbol">${item.count ? '⚠️' : '🔎'}</div>
+      <div class="history-content">
+        <b>${escapeHTML(item.url)}</b>
+        <small>${item.date} · ${item.count} Warnzeichen erkannt</small>
+      </div>
+    </div>`).join('');
+}
+
+function updateStats() {
+  document.getElementById('statScans').textContent=historyItems.length;
+  document.getElementById('statFlags').textContent=
+    historyItems.reduce((sum,item)=>sum+item.count,0);
+}
+
+function clearHistory() {
+  if(!confirm('Möchtest du den lokalen Verlauf wirklich löschen?')) return;
+  historyItems=[];
+  renderHistory();
+  updateStats();
+}
+
+function toggleEffects(enabled) {
+  document.querySelectorAll('.shield-ring').forEach(el=>{
+    el.style.animation=enabled?'rotate 12s linear infinite':'none';
+  });
+}
+
+function showTips() {
+  alert(
+    'AFTERTAP · SICHERHEITSTIPPS\\n\\n'+
+    '1. Öffne keine unerwarteten Links aus Nachrichten.\\n'+
+    '2. Prüfe die vollständige Domain genau.\\n'+
+    '3. Gib Passwörter nicht über Links aus Nachrichten ein.\\n'+
+    '4. Bei Banken oder Shops: Öffne die offizielle App selbst.\\n'+
+    '5. Ein Schloss-Symbol oder HTTPS beweist nicht, dass eine Seite vertrauenswürdig ist.\\n\\n'+
+    'Im Zweifel: nicht klicken.'
+  );
+}
+
+document.getElementById('url').addEventListener('keydown', e => {
+  if(e.key === 'Enter') scanLink();
+});
+</script>
+</body>
+</html>
